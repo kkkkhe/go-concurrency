@@ -22,9 +22,7 @@ func OrChannel() {
 			case 2:
 				select {
 				case <-channels[0]:
-					fmt.Println("fukc1")
 				case <-channels[1]:
-					fmt.Println("fukc2")
 				}
 			default:
 				select {
