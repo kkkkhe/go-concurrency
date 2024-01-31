@@ -1,16 +1,29 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"math/rand"
+	"time"
+)
 
 func main() {
 
-	done := make(chan interface{})
-
-	values := InitPipeline(done, 1, 2, 3, 4, 5)
-	result := Add(Multiply(values, 2, done), 4, done)
-	// done <- true
-	for value := range result {
-		fmt.Println(value)
+	numStream := make(chan interface{}, 100)
+	for i := 0; i < 100; i++ {
+		numStream <- i
 	}
 
+	done := make(chan interface{})
+	intRand := func() int { return rand.Intn(50000000) }
+	now := time.Now()
+	streams := make([]<-chan int, 8)
+
+	for i := 0; i < 8; i++ {
+		streams[i] = PrimeFinder(done, Repeat(done, intRand))
+	}
+	for r := range Take(Fanin(done, streams...), done, 10) {
+		fmt.Println("Result num: ", r)
+	}
+	fmt.Println("Since:", time.Since(now).Seconds())
+	close(done)
 }
