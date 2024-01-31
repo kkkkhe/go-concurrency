@@ -2,21 +2,19 @@ package main
 
 import (
 	"fmt"
-	"time"
+	"math/rand"
 )
 
 func main() {
 	done := make(chan interface{})
-	fn := func() int { return 2 }
+	defer close(done)
+	fn := func() int { return rand.Intn(100) }
 
-	res := Take(Repeat(done, fn), done, 10)
+	res := Take(Repeat(done, fn), done, 11)
 
-	for num := range res {
-		if num == 2 {
-			close(done)
-		}
-		fmt.Println(num)
+	out1, out2 := TeeChannel(done, res)
+
+	for val1 := range out1 {
+		fmt.Printf("out1: %v, out2: %v\n", val1, <-out2)
 	}
-
-	time.Sleep(10 * time.Second)
 }

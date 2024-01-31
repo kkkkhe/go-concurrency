@@ -1,6 +1,6 @@
 package main
 
-func OrDone(done, stream <-chan interface{}) <-chan interface{} {
+func OrDone(done <-chan interface{}, stream <-chan int) <-chan interface{} {
 	resultStream := make(chan interface{})
 
 	go func() {
