@@ -1,6 +1,6 @@
 package main
 
-func TeeChannel(done <-chan interface{}, stream <-chan int) (_, _ <-chan interface{}) {
+func TeeChannel(done <-chan interface{}, stream <-chan interface{}) (_, _ <-chan interface{}) {
 	out1 := make(chan interface{})
 	out2 := make(chan interface{})
 

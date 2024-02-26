@@ -1,6 +1,8 @@
 package main
 
-func OrDone(done <-chan interface{}, stream <-chan int) <-chan interface{} {
+import "fmt"
+
+func OrDone(done <-chan interface{}, stream <-chan interface{}) <-chan interface{} {
 	resultStream := make(chan interface{})
 
 	go func() {
@@ -13,6 +15,8 @@ func OrDone(done <-chan interface{}, stream <-chan int) <-chan interface{} {
 				if ok == false {
 					return
 				}
+				fmt.Println("lul")
+				// resultStream <- v
 				select {
 				case <-done:
 				case resultStream <- v:
